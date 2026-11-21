@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calculadora de energia para clínica de fisioterapia</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17313b;background:#f2f6f7;line-height:1.5}*{box-sizing:border-box}body{margin:0}main{max-width:1180px;margin:auto;padding:34px 24px 60px}header{margin-bottom:26px}.eyebrow{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;font-weight:750;color:#347060}h1{font-size:clamp(1.8rem,4vw,2.7rem);line-height:1.15;max-width:850px;margin:12px 0}h2{font-size:1.2rem;margin:0 0 16px}h3{font-size:1.03rem;margin:0}p{max-width:85ch}.muted{color:#526970}.panel{background:#fff;border:1px solid #d6e2e4;border-radius:16px;padding:24px;margin:18px 0}.settings{display:grid;grid-template-columns:2fr 1fr 2fr;gap:16px}.field{display:flex;flex-direction:column;gap:5px}label,.label{font-size:.86rem;font-weight:650}input,select,textarea,button{font:inherit}input,select,textarea{padding:9px 10px;min-width:0;width:100%;border:1px solid #adc1c6;border-radius:7px;color:#17313b;background:white}textarea{resize:vertical;min-height:65px}input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid #6fb6a5;outline-offset:2px}input:invalid{border-color:#b63636}button,.file-button{cursor:pointer;border:1px solid #b8cccf;border-radius:8px;padding:9px 14px;background:white;color:#17313b;font-weight:650;display:inline-block}button:hover,.file-button:hover{background:#eaf2f3}.primary{background:#176452;color:white;border-color:#176452}.primary:hover{background:#104a3d}.toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}.stat{padding:20px;background:white;border:1px solid #d6e2e4;border-radius:12px}.stat strong{display:block;font-size:1.6rem;margin:7px 0}.stat span{font-size:.82rem;color:#526970}.stat.saving{background:#e3f2ec;border-color:#93c4b4}.stat.negative{background:#fceeee;border-color:#daaaaa}.note{font-size:.9rem}.warning{padding:14px 18px;border-radius:8px;background:#fff4dc;color:#64440e}#message{min-height:1.5em;font-size:.9rem}#message.error{color:#a12727}.item{border:1px solid #d6e2e4;border-radius:12px;padding:20px;margin-top:18px}.item-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:14px}.item-meta{display:grid;grid-template-columns:2fr 1fr 1.3fr;gap:12px}.usage{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}.scenario{background:#f4f8f9;border-radius:9px;padding:16px}.scenario h4{margin:0 0 12px;font-size:.95rem}.numbers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.shared{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}.result{font-variant-numeric:tabular-nums;font-size:.93rem;margin:12px 0 0}.empty{text-align:center;padding:24px;color:#526970}.table-scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{padding:11px 12px;text-align:left;border-bottom:1px solid #d6e2e4}th{background:#f0f5f6}td:nth-last-child(-n+3),th:nth-last-child(-n+3){text-align:right}details{border-top:1px solid #d6e2e4;margin-top:18px;padding-top:15px}summary{cursor:pointer;font-weight:650}li{margin:7px 0}a{color:#155c4d}footer{font-size:.8rem;color:#526970;margin-top:30px}[hidden]{display:none!important}.noscript{color:#a12727}
+@media(max-width:760px){main{padding:22px 14px}.settings,.item-meta{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.usage{grid-template-columns:1fr}.panel{padding:18px}.item{padding:15px}.stat{padding:15px}.stat strong{font-size:1.25rem}.toolbar button,.file-button{font-size:.85rem}}
+@media print{body{background:white}main{padding:0;max-width:none}.toolbar,.remove,.noscript,#message{display:none}input,textarea,select{border:0;padding:0}.panel,.stat,.item{break-inside:avoid;box-shadow:none}.stats{grid-template-columns:repeat(4,1fr)}details{display:block}details>*{display:block}h1{font-size:23pt}.item{font-size:9pt}a{color:inherit;text-decoration:none}}
+</style></head>
+<body><main>
+<header><div class="eyebrow">Projeto de extensão • ODS 7</div><h1>Energia sob controle na clínica</h1><p class="muted">Entenda o consumo dos equipamentos e compare oportunidades de eficiência energética na fisioterapia.</p></header>
+<noscript><p class="noscript">Ative o JavaScript do navegador para usar a calculadora.</p></noscript>
+<section class="panel" aria-labelledby="setup-title"><h2 id="setup-title">1. Defina os dados do cenário</h2>
+<div class="settings"><div class="field"><label for="clinic">Clínica ou cenário</label><input id="clinic" maxlength="120" placeholder="Ex.: clínica parceira — mês de referência"></div><div class="field"><label for="tariff">Tarifa variável (R$/kWh)</label><input id="tariff" type="number" step="0.0001" min="0" max="100" value="1" required></div><div class="field"><label for="tariffSource">Origem da tarifa</label><input id="tariffSource" maxlength="250" value="R$ 1,00/kWh é apenas exemplo. Substituir pela fatura."></div></div>
+<p class="note muted">A tarifa inicial é didática. Utilize os componentes variáveis da fatura. O resultado estima o custo dos itens cadastrados; cobranças fixas, demanda, tributos não incorporados e tarifas por horário exigem análise própria.</p>
+<p id="demo" class="warning" hidden>Exemplo didático carregado. Potências, horários e tarifa são hipotéticos e não representam resultados da clínica.</p>
+</section>
+<section aria-label="Resumo da comparação"><div class="stats">
+<div class="stat"><span>Consumo atual</span><strong id="current">0,00 kWh</strong><span>por mês cadastrado</span></div>
+<div class="stat"><span>Consumo proposto</span><strong id="proposed">0,00 kWh</strong><span>por mês cadastrado</span></div>
+<div class="stat saving" id="savingCard"><span id="savingLabel">Economia simulada</span><strong id="saving">R$ 0,00</strong><span id="change">Sem consumo de referência</span></div>
+<div class="stat"><span>Projeção anual simples</span><strong id="annual">R$ 0,00</strong><span>mesmo mês repetido 12 vezes</span></div>
+</div><p id="costs" class="note muted"></p></section>
+<section class="panel" aria-labelledby="items-title"><h2 id="items-title">2. Cadastre os equipamentos</h2><p class="note muted">Informe os dados atuais e uma hipótese de melhoria validada com a equipe. Não altere parâmetros terapêuticos para economizar energia.</p>
+<div class="toolbar"><button class="primary" id="add">Adicionar equipamento</button><button id="loadDemo">Exemplo didático</button><button id="clear">Novo cenário vazio</button></div><div id="items"></div></section>
+<section class="panel" aria-labelledby="report-title"><h2 id="report-title">3. Compare e registre</h2>
+<div class="table-scroll"><table><thead><tr><th>Equipamento</th><th>Setor</th><th>Atual kWh</th><th>Proposto kWh</th><th>Diferença kWh</th></tr></thead><tbody id="report"></tbody></table></div>
+<p id="totalDifference" class="note"></p>
+<div class="toolbar"><button id="csv">Baixar relatório CSV</button><button id="save">Salvar projeto JSON</button><label class="file-button" for="import">Abrir projeto JSON</label><input type="file" id="import" accept=".json,application/json" hidden><button id="print">Imprimir ou salvar PDF</button></div>
+<p id="message" role="status" aria-live="polite"></p><p class="note muted">Os dados ficam somente nesta página enquanto ela estiver aberta. Para continuar depois, use Salvar projeto JSON. Compartilhe apenas arquivos sem informações pessoais ou de pacientes.</p>
+</section>
+<section class="panel"><h2>Como interpretar a simulação</h2><p><strong>Por potência:</strong> kWh/mês = quantidade × potência elétrica em W ÷ 1000 × horas/dia × dias/mês × fator de utilização.</p><p><strong>Por kWh informado:</strong> o valor é o consumo mensal total do item ou grupo; não é multiplicado por quantidade, horas ou dias.</p>
+<details><summary>Dados e limites do cálculo</summary><ul><li>Use a potência elétrica de entrada. BTU/h e potência terapêutica não são o consumo elétrico do aparelho.</li><li>O fator é a razão entre potência média e potência de referência nas horas informadas. Se a potência já é uma média medida, use fator 1. O fator 1 com potência nominal é uma hipótese de carga integral.</li><li>Para equipamentos com ciclos, prefira medição de consumo compatível com o período. Não some o total da fatura aos equipamentos já cadastrados.</li><li>Na origem “Medição”, descreva o período e o método. A conta continua sendo uma comparação de cenários, sem comprovar causalidade ou economia efetiva.</li><li>A tarifa deve refletir os custos variáveis desejados. Valores fixos, juros e parcelamentos não representam economia proporcional aos kWh.</li><li>A projeção anual não incorpora sazonalidade. Diferenças negativas indicam aumento de consumo.</li><li>Ajustes de operação devem respeitar manuais, manutenção e protocolos da clínica. Este projeto não comanda equipamentos.</li></ul></details>
+<details><summary>Fontes de consulta</summary><ul><li><a href="https://brasil.un.org/pt-br/sdgs/7" target="_blank" rel="noopener">ONU Brasil — ODS 7</a></li><li><a href="https://www.gov.br/aneel/pt-br/centrais-de-conteudos/relatorios-e-indicadores/tarifas-e-informacoes-economico-financeiras" target="_blank" rel="noopener">ANEEL — informações tarifárias</a></li><li><a href="https://www.gov.br/inmetro/pt-br/assuntos/regulamentacao/avaliacao-da-conformidade/programa-brasileiro-de-etiquetagem/sobre-a-etiqueta" target="_blank" rel="noopener">Inmetro — etiqueta de eficiência</a></li></ul></details></section>
+<footer>Calculadora educativa • Clínica de fisioterapia • Versão 1.0 • Novembro de 2026<br>O custo variável estimado não corresponde necessariamente ao valor total da conta de energia.</footer>
+</main><script>
+'use strict';
+const $=id=>document.getElementById(id);
+const num=new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const money=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+let items=[], isDemo=false, nextId=1;
+const defaults=()=>({id:nextId++,name:'',sector:'',mode:'power',origin:'Hipótese',source:'',q:1,days:22,p0:0,h0:0,f0:1,p1:0,h1:0,f1:1,e0:0,e1:0});
+function calc(x,scenario){return x.mode==='direct'?x['e'+scenario]:x.q*x['p'+scenario]/1000*x['h'+scenario]*x.days*x['f'+scenario];}
+function totals(){return items.reduce((a,x)=>[a[0]+calc(x,0),a[1]+calc(x,1)],[0,0]);}
+function valid(){return [...document.querySelectorAll('input[type=number]')].every(x=>x.checkValidity() && x.value!=='' && Number.isFinite(Number(x.value)));}
+function status(t,error=false){$('message').textContent=t;$('message').classList.toggle('error',error);}
+function invalidate(){for(const id of ['current','proposed','saving','annual']) $(id).textContent='—';$('change').textContent='Corrija os campos numéricos';$('costs').textContent='Há dados vazios ou fora dos limites. Os totais não estão disponíveis.';$('report').replaceChildren();$('totalDifference').textContent='';}
+function update(){
+ $('demo').hidden=!isDemo;
+ if(!valid()){invalidate();return;}
+ const t=Number($('tariff').value),[a,b]=totals(),delta=a-b;
+ $('current').textContent=num.format(a)+' kWh';$('proposed').textContent=num.format(b)+' kWh';$('saving').textContent=money.format(Math.abs(delta*t));$('annual').textContent=money.format(delta*t*12);
+ $('savingLabel').textContent=delta<0?'Aumento simulado':'Economia simulada';$('savingCard').classList.toggle('negative',delta<0);
+ $('change').textContent=a>0?num.format(Math.abs(delta/a*100))+'% '+(delta<0?'de aumento':'de redução'):'Sem consumo de referência';
+ $('costs').textContent='Custo variável atual: '+money.format(a*t)+' · Proposto: '+money.format(b*t)+'.';
+ $('totalDifference').textContent='Diferença mensal (atual − proposto): '+num.format(delta)+' kWh. Projeção anual simples: '+num.format(delta*12)+' kWh.';
+ $('report').replaceChildren();
+ for(const x of items){const tr=document.createElement('tr');for(const v of [x.name||'Sem nome',x.sector||'—',num.format(calc(x,0)),num.format(calc(x,1)),num.format(calc(x,0)-calc(x,1))]){const td=document.createElement('td');td.textContent=v;tr.append(td);}$('report').append(tr);}
+ for(const x of items){const target=$('r'+x.id);if(target)target.textContent='Atual: '+num.format(calc(x,0))+' kWh · Proposto: '+num.format(calc(x,1))+' kWh';}
+}
+function control(parent,x,key,label,type='text',opts={}){
+ const wrap=document.createElement('div');wrap.className='field';const lab=document.createElement('label'),id='i'+x.id+'_'+key;lab.htmlFor=id;lab.textContent=label;let input;
+ if(type==='select'){input=document.createElement('select');for(const [value,text] of opts.choices){const op=document.createElement('option');op.value=value;op.textContent=text;input.append(op);}}
+ else{input=document.createElement(type==='textarea'?'textarea':'input');if(type!=='textarea') input.type=type;}
+ input.id=id;input.value=x[key];
+ if(type==='number'){input.min=opts.min??0;input.max=opts.max??100000;input.step=opts.step??'any';input.required=true;}
+ if(type==='text'||type==='textarea')input.maxLength=opts.maxLength??500;
+ input.addEventListener(type==='select'?'change':'input',()=>{
+  x[key]=type==='number'?Number(input.value):input.value;
+  if(key==='mode'){render();}else update();
+ });wrap.append(lab,input);parent.append(wrap);return input;
+}
+function render(){
+ $('items').replaceChildren();if(!items.length){const p=document.createElement('p');p.className='empty';p.textContent='Comece adicionando um equipamento ou carregue o exemplo didático.';$('items').append(p);}
+ for(const [index,x] of items.entries()){
+  const box=document.createElement('article');box.className='item';const head=document.createElement('div');head.className='item-head';const title=document.createElement('h3');title.textContent='Equipamento '+(index+1);const remove=document.createElement('button');remove.textContent='Remover';remove.className='remove';remove.setAttribute('aria-label','Remover equipamento '+(index+1));remove.onclick=()=>{items=items.filter(y=>y.id!==x.id);render();};head.append(title,remove);box.append(head);
+  const meta=document.createElement('div');meta.className='item-meta';control(meta,x,'name','Equipamento');control(meta,x,'sector','Setor');control(meta,x,'mode','Forma de cálculo','select',{choices:[['power','Por potência elétrica'],['direct','Por kWh mensal informado']]});box.append(meta);
+  if(x.mode==='power'){
+   const shared=document.createElement('div');shared.className='shared';control(shared,x,'q','Quantidade de aparelhos','number',{min:1,max:100000,step:1});control(shared,x,'days','Dias de uso no mês','number',{min:0,max:31,step:1});box.append(shared);
+  }
+  const usage=document.createElement('div');usage.className='usage';
+  for(let i=0;i<2;i++){const scenario=document.createElement('div');scenario.className='scenario';const st=document.createElement('h4');st.textContent=i===0?'Cenário atual':'Cenário proposto';scenario.append(st);const fields=document.createElement('div');fields.className='numbers';
+   if(x.mode==='power'){control(fields,x,'p'+i,'Potência de entrada (W)','number',{max:10000000});control(fields,x,'h'+i,'Horas por dia','number',{max:24});control(fields,x,'f'+i,'Fator de utilização (0 a 1)','number',{max:1,step:'any'});}
+   else control(fields,x,'e'+i,'Consumo do grupo (kWh/mês)','number',{max:100000000});scenario.append(fields);usage.append(scenario);
+  }box.append(usage);
+  const sources=document.createElement('div');sources.className='shared';control(sources,x,'origin','Base principal dos dados','select',{choices:[['Hipótese','Hipótese / estimativa'],['Placa ou manual','Placa ou manual'],['Medição','Medição']]});control(sources,x,'source','Fonte, período e justificativa','textarea',{maxLength:2000});box.append(sources);
+  const result=document.createElement('p');result.className='result';result.id='r'+x.id;box.append(result);$('items').append(box);
+ }update();
+}
+function replaceAllowed(){return !items.length||window.confirm('Substituir os equipamentos deste cenário? Salve o projeto JSON antes se quiser mantê-lo.');}
+$('add').onclick=()=>{items.push(defaults());render();document.getElementById('i'+items[items.length-1].id+'_name').focus();};
+$('loadDemo').onclick=()=>{if(!replaceAllowed())return;items=[];nextId=1;for(const [name,sector,q,p,h0,h1] of [['Lâmpadas','Geral',20,18,10,8],['Ar-condicionado','Salas',2,1200,8,7],['Computadores','Administração',3,120,9,8],['Ultrassom','Atendimento',1,80,3,3],['Eletroestimulador','Atendimento',1,40,3,3]]){items.push({...defaults(),name,sector,q,p0:p,p1:p,h0,h1,source:'Exemplo hipotético; não é recomendação de alteração de atendimento.'});}isDemo=true;$('tariff').value=1;$('clinic').value='Exemplo didático — clínica de fisioterapia';$('tariffSource').value='Tarifa hipotética de R$ 1,00/kWh';render();status('Exemplo carregado. Substitua os dados antes de analisar a clínica.');};
+$('clear').onclick=()=>{if(!replaceAllowed())return;items=[];isDemo=false;$('clinic').value='';$('tariff').value=1;$('tariffSource').value='R$ 1,00/kWh é apenas exemplo. Substituir pela fatura.';render();status('Novo cenário iniciado.');};
+for(const id of ['clinic','tariff','tariffSource'])$(id).addEventListener('input',update);
+function download(name,type,data){const url=URL.createObjectURL(new Blob(['\ufeff',data],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function ready(){if(!valid()){status('Corrija os campos numéricos antes de exportar.',true);return false;}return true;}
+const csvCell=v=>{let s=typeof v==='number'?String(v).replace('.',','):String(v??'');if(typeof v!=='number'&&/^\s*[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"';};
+$('csv').onclick=()=>{
+ if(!ready())return;const [a,b]=totals(),t=Number($('tariff').value);const rows=[['Calculadora de energia — clínica de fisioterapia'],['Cenário',$('clinic').value],['Exemplo didático',isDemo?'Sim':'Não'],['Tarifa R$/kWh',t],['Origem da tarifa',$('tariffSource').value],['Comparação de cenários; não comprova economia realizada'],[],['Equipamento','Setor','Modo','Origem','Fonte e justificativa','Quantidade','Dias','Atual W','Atual h/dia','Atual fator','Proposto W','Proposto h/dia','Proposto fator','Atual kWh','Proposto kWh','Diferença kWh','Atual R$','Proposto R$']];
+ for(const x of items){const c=calc(x,0),p=calc(x,1);rows.push([x.name,x.sector,x.mode==='power'?'Potência':'kWh informado',x.origin,x.source,...(x.mode==='power'?[x.q,x.days,x.p0,x.h0,x.f0,x.p1,x.h1,x.f1]:Array(8).fill('')),c,p,c-p,c*t,p*t]);}
+ rows.push([],['Total atual kWh',a],['Total proposto kWh',b],['Diferença mensal kWh',a-b],['Diferença mensal R$',(a-b)*t],['Diferença anual simples R$',(a-b)*t*12]);
+ download('relatorio_energia_clinica.csv','text/csv;charset=utf-8',rows.map(r=>r.map(csvCell).join(';')).join('\r\n'));status('Relatório CSV exportado.');
+};
+$('save').onclick=()=>{if(!ready())return;download('projeto_energia_clinica.json','application/json;charset=utf-8',JSON.stringify({version:1,clinic:$('clinic').value,tariff:Number($('tariff').value),tariffSource:$('tariffSource').value,isDemo,items},null,2));status('Projeto salvo. Use Abrir projeto JSON para continuar depois.');};
+function parseProject(v){
+ if(!v||typeof v!=='object'||v.version!==1||!Array.isArray(v.items)||v.items.length>200)throw new Error('Formato inválido ou mais de 200 equipamentos.');
+ const str=(o,k,n)=>{if(typeof o[k]!=='string'||o[k].length>n)throw new Error('Texto inválido em '+k);return o[k];};
+ const number=(o,k,min,max,integer=false)=>{let n=o[k];if(typeof n!=='number'||!Number.isFinite(n)||n<min||n>max||(integer&&!Number.isInteger(n)))throw new Error('Número inválido em '+k);return n;};
+ const result={clinic:str(v,'clinic',120),tariff:number(v,'tariff',0,100),tariffSource:str(v,'tariffSource',250),isDemo:v.isDemo===true,items:[]};
+ for(const x of v.items){if(!x||!['power','direct'].includes(x.mode)||!['Hipótese','Placa ou manual','Medição'].includes(x.origin))throw new Error('Equipamento inválido.');const y={name:str(x,'name',500),sector:str(x,'sector',500),mode:x.mode,origin:x.origin,source:str(x,'source',2000)};for(const [key,min,max,int] of [['q',1,100000,true],['days',0,31,true],['p0',0,10000000],['p1',0,10000000],['h0',0,24],['h1',0,24],['f0',0,1],['f1',0,1],['e0',0,100000000],['e1',0,100000000]])y[key]=number(x,key,min,max,int);result.items.push(y);}return result;
+}
+$('import').onchange=async event=>{const file=event.target.files[0];if(!file)return;try{if(file.size>2000000)throw new Error('Arquivo maior que 2 MB.');const v=parseProject(JSON.parse((await file.text()).replace(/^\uFEFF/,'')));if(!replaceAllowed())return;nextId=1;items=v.items.map(x=>({...x,id:nextId++}));$('clinic').value=v.clinic;$('tariff').value=v.tariff;$('tariffSource').value=v.tariffSource;isDemo=v.isDemo;render();status('Projeto importado com sucesso.');}catch(error){status('Não foi possível abrir o projeto: '+error.message,true);}finally{event.target.value='';}};
+$('print').onclick=()=>{if(ready())window.print();};render();
+</script></body></html>
